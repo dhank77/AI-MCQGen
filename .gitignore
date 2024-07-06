@@ -1,0 +1,6 @@
+node_modules
+venv
+env
+.env
+db.sqlite3
+experiment/ineoran.ipynb

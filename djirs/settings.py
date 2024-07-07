@@ -87,20 +87,20 @@ WSGI_APPLICATION = 'djirs.wsgi.application'
 
 DATABASES = {
     # sqlite3
-    'default': {
-        'ENGINE': env("DB_ENGINE", default="django.db.backends.sqlite3"),
-        'NAME': BASE_DIR / env("DB_DATABASE", default="db.sqlite3"),
-    }
+    # 'default': {
+    #     'ENGINE': env("DB_ENGINE", default="django.db.backends.sqlite3"),
+    #     'NAME': BASE_DIR / env("DB_DATABASE", default="db.sqlite3"),
+    # }
 
     # pgsql / mysql
-    # 'default': {
-    #     'ENGINE': env("DB_ENGINE"),
-    #     'NAME': env("DB_DATABASE"), 
-    #     'USER': env("DB_USERNAME"),
-    #     'PASSWORD': env("DB_PASSWORD"),
-    #     'HOST': env("DB_HOST"),
-    #     'PORT': env("DB_PORT"),
-    # }
+    'default': {
+        'ENGINE': env("DB_ENGINE"),
+        'NAME': env("DB_DATABASE"), 
+        'USER': env("DB_USERNAME"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"),
+        'PORT': env("DB_PORT"),
+    }
 }
 
 

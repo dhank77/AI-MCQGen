@@ -3,14 +3,8 @@ import {
    AlertCircle,
    Bell,
    CheckCheckIcon,
-   Home,
-   LineChart,
-   Package,
    Package2,
-   ShoppingCart,
-   Users,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/partials/header";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -43,7 +37,7 @@ export default function Authenticated({ children }) {
                         className="flex items-center gap-2 font-semibold"
                      >
                         <Package2 className="h-6 w-6" />
-                        <span className="">DJIRS</span>
+                        <span className="">AI PilGan</span>
                      </Link>
                      <Button
                         variant="outline"

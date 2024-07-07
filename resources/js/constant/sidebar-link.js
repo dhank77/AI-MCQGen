@@ -1,4 +1,4 @@
-import { Home, User, Settings, Cpu, ScanEye } from "lucide-react";
+import { Home, Settings, QuoteIcon } from "lucide-react";
 
 export const sidebarLink = [
   {
@@ -7,9 +7,9 @@ export const sidebarLink = [
     label : 'Dashboard'
   },
   {
-    imageIcon : User,
-    route : '/admin/profile/',
-    label : 'My Profile'
+    imageIcon : QuoteIcon,
+    route : '/admin/quiz/',
+    label : 'Quiz'
   },
   {
     imageIcon : Settings,

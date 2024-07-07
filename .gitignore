@@ -4,3 +4,7 @@ env
 .env
 db.sqlite3
 experiment/ineoran.ipynb
+/admin/__pycache__
+/admin/migrations/__pycache__
+/djirs/__pycache__
+/admin/quiz/__pycache__

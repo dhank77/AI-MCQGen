@@ -13,7 +13,8 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 
-export default function Index({ errors }) {
+export default function Index({ errors, data }) {
+   const [isLoading, setIsLoading] = useState(false)
    const [values, setValues] = useState({
       kesulitan: "",
       kategori: "",
@@ -30,7 +31,10 @@ export default function Index({ errors }) {
 
    const handleSubmit = (event) => {
       event.preventDefault();
-      router.post("/admin/quiz/", values);
+      setIsLoading(true)
+      router.post("/admin/quiz/", values, {
+         onError: () => setIsLoading(false)
+      });
    };
 
    return (
@@ -53,6 +57,7 @@ export default function Index({ errors }) {
                            <Input
                               type="text"
                               name="kategori"
+                              disabled={isLoading}
                               placeholder="Kecepatan & Jarak"
                               onChange={handleChange}
                            />
@@ -68,6 +73,7 @@ export default function Index({ errors }) {
                            <Input
                               type="number"
                               min="1"
+                              disabled={isLoading}
                               value={values.jumlah}
                               name="jumlah"
                               onChange={handleChange}
@@ -81,7 +87,7 @@ export default function Index({ errors }) {
                         </div>
                         <div className="grid w-full my-4 max-w-md items-center gap-1.5">
                            <Label>Tingkat Kesulitan</Label>
-                           <Select onValueChange={(e) => setValues({ ...values, kesulitan: e })}>
+                           <Select disabled={isLoading} onValueChange={(e) => setValues({ ...values, kesulitan: e })}>
                               <SelectTrigger className="w-full">
                                  <SelectValue placeholder="Pilih" />
                               </SelectTrigger>
@@ -100,7 +106,7 @@ export default function Index({ errors }) {
                         </div>
                         <div className="grid w-full my-4 max-w-md items-center gap-1.5">
                            <Label>Tingkat Pendidikan</Label>
-                           <Select onValueChange={(e) => setValues({ ...values, level: e })}>
+                           <Select disabled={isLoading} onValueChange={(e) => setValues({ ...values, level: e })}>
                               <SelectTrigger className="w-full">
                                  <SelectValue placeholder="Pilih" />
                               </SelectTrigger>
@@ -122,8 +128,9 @@ export default function Index({ errors }) {
                               type="submit"
                               className="mt-4 text-white dark:text-black w-full"
                               size="lg"
+                              disabled={isLoading}
                            >
-                              Save
+                              { isLoading ? 'Loading...' : 'Save'}
                            </Button>
                         </div>
                      </form>

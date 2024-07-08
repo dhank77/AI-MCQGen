@@ -1,6 +1,5 @@
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain, SequentialChain
-from langchain.callbacks import get_openai_callback
 from langchain_community.chat_models import ChatOllama
 from django.conf import settings
 
@@ -10,8 +9,7 @@ def generate(kategori, jumlah, kesulitan, level) :
 
     TEMPLATE="""
     Text={text}
-    Nama kamu adalah DhankMaker, Kamu adalah seorang instruktur atau guru yang sangat handal dalam segala bidang, 
-    yang ditugaskan untuk membuat soal dan jawaban pilihan ganda menggunakan bahasa indonesia.
+    Kamu adalah seorang guru yang sangat handal dalam segala bidang yang ditugaskan untuk membuat soal dan jawaban dengan tipe soal pilihan ganda menggunakan bahasa indonesia.
     buat soal pilihan ganda yang jumlah soalnya {number} dengan tema {subject} dan diperuntukkan bagi siswa {level} dengan tingkat kesulitan {tone} .
     pastikan bahwa soalnya tidak berulang dan pastikan semua soalnya dalam bentuk teks
     pastikan format respon nya seperti RESPONSE_JSON dibawah dan gunakan itu sebagai petunjuk 
@@ -51,14 +49,16 @@ def generate(kategori, jumlah, kesulitan, level) :
         output_variables=["quiz", "eval"],
         verbose=True
     )
+    res_json = str(settings.BASE_DIR) + '/' + 'templates/Response.json'
 
     response = generate_eval({
         "text": "Soal Pilihan Ganda",
         "number": jumlah,
         "subject": kategori,
         "tone": kesulitan,
-        "response_json": settings.BASE_URL + '/templates/Response.json',
+        "response_json": res_json,
         "level": level
     })
 
-    return response
+    for res in response.astream() :
+        print(res['quiz'])

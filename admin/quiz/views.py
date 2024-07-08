@@ -10,7 +10,9 @@ def index(request) :
 
         if form.is_valid() :
             res = generate(kategori=data['kategori'], jumlah=data['jumlah'], kesulitan=data['kesulitan'], level=data['level'])
-            dd(res)
+            return render(request, 'admin/quiz/index', props={
+                "data" : res['quiz']
+            })
         else :
             return render(request, 'admin/quiz/index', props={
                 "errors" : form.errors

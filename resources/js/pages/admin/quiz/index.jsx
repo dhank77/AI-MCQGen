@@ -28,11 +28,9 @@ export default function Index({ errors }) {
       });
    };
 
-   console.log(values);
-
    const handleSubmit = (event) => {
       event.preventDefault();
-      router.post("/admin/quiz", values);
+      router.post("/admin/quiz/", values);
    };
 
    return (
@@ -46,7 +44,7 @@ export default function Index({ errors }) {
          </div>
 
          <div className="flex flex-1">
-            <div className="md:w-1/3">
+            <div className="md:w-3/5">
                <Card>
                   <CardContent className="mt-8">
                      <form onSubmit={handleSubmit}>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
    Select,
    SelectContent,
@@ -28,6 +28,13 @@ export default function Index({ errors, data }) {
          [event.target.name]: event.target.value,
       });
    };
+
+   useEffect(() => {
+      if(data != undefined){
+         setIsLoading(false)
+      }
+   }, [data])
+   
 
    const handleSubmit = (event) => {
       event.preventDefault();
@@ -92,9 +99,9 @@ export default function Index({ errors, data }) {
                                  <SelectValue placeholder="Pilih" />
                               </SelectTrigger>
                               <SelectContent>
-                                 <SelectItem value="mudah">Mudah</SelectItem>
-                                 <SelectItem value="sedang">Sedang</SelectItem>
-                                 <SelectItem value="sulit">Sulit</SelectItem>
+                                 <SelectItem value="simple">Mudah</SelectItem>
+                                 <SelectItem value="middle">Sedang</SelectItem>
+                                 <SelectItem value="difficult">Sulit</SelectItem>
                               </SelectContent>
                            </Select>
                            {errors?.kesulitan && (
@@ -111,9 +118,9 @@ export default function Index({ errors, data }) {
                                  <SelectValue placeholder="Pilih" />
                               </SelectTrigger>
                               <SelectContent>
-                                 <SelectItem value="sekolah dasar">(SD) Sekolah Dasar</SelectItem>
-                                 <SelectItem value="sekolah menangah pertama">(SMP) Sekolah Menengah Pertama</SelectItem>
-                                 <SelectItem value="sekolah menangah atas">(SMA) Sekolah Menengah Atas</SelectItem>
+                                 <SelectItem value="elementary school">(SD) Sekolah Dasar</SelectItem>
+                                 <SelectItem value="junior high school">(SMP) Sekolah Menengah Pertama</SelectItem>
+                                 <SelectItem value="senior high school">(SMA) Sekolah Menengah Atas</SelectItem>
                               </SelectContent>
                            </Select>
                            {errors?.level && (
@@ -140,7 +147,31 @@ export default function Index({ errors, data }) {
             <div className="inline-block mx-4 min-h-[200px] w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
             <div className="w-full">
                <Card>
-                  <CardContent></CardContent>
+                  <CardContent>{!isLoading ? (
+                     <div style={{ whiteSpace: 'pre-line' }}>{(data)}</div>
+                  ) : <>
+                     <h1 className="font-semibold text-xl uppercase my-6">{values.kategori}</h1>
+                     <div>
+                     <div aria-label="Loading..." role="status" className="flex items-center space-x-2">
+                        <svg className="h-20 w-20 animate-spin stroke-gray-500" viewBox="0 0 256 256">
+                           <line x1={128} y1={32} x2={128} y2={64} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
+                           <line x1="195.9" y1="60.1" x2="173.3" y2="82.7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
+                           <line x1={224} y1={128} x2={192} y2={128} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24}>
+                           </line>
+                           <line x1="195.9" y1="195.9" x2="173.3" y2="173.3" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
+                           <line x1={128} y1={224} x2={128} y2={192} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24}>
+                           </line>
+                           <line x1="60.1" y1="195.9" x2="82.7" y2="173.3" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
+                           <line x1={32} y1={128} x2={64} y2={128} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
+                           <line x1="60.1" y1="60.1" x2="82.7" y2="82.7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24}>
+                           </line>
+                        </svg>
+                        <span className="text-4xl font-medium text-gray-500">Loading...</span>
+                     </div>
+
+                     </div>
+                  </>
+                  }</CardContent>
                </Card>
             </div>
          </div>

@@ -11,7 +11,7 @@ def index(request) :
         if form.is_valid() :
             res = generate(kategori=data['kategori'], jumlah=data['jumlah'], kesulitan=data['kesulitan'], level=data['level'])
             return render(request, 'admin/quiz/index', props={
-                "data" : res['quiz']
+                "data" : json.loads(res['trans'])
             })
         else :
             return render(request, 'admin/quiz/index', props={

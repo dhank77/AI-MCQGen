@@ -12,9 +12,11 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/components/ui/select";
+import QuizQuestion from "@/components/partials/quiz";
 
 export default function Index({ errors, data }) {
-   const [isLoading, setIsLoading] = useState(false)
+   const [isLoading, setIsLoading] = useState(false);
+   const [question, setQuestion] = useState([]);
    const [values, setValues] = useState({
       kesulitan: "",
       kategori: "",
@@ -30,19 +32,23 @@ export default function Index({ errors, data }) {
    };
 
    useEffect(() => {
-      if(data != undefined){
-         setIsLoading(false)
+      if (data != undefined) {
+         setIsLoading(false);
+         let qz = JSON.parse(data);
+         setQuestion(qz);
       }
-   }, [data])
-   
+   }, [data]);
 
    const handleSubmit = (event) => {
       event.preventDefault();
-      setIsLoading(true)
+      setIsLoading(true);
       router.post("/admin/quiz/", values, {
-         onError: () => setIsLoading(false)
+         onError: () => setIsLoading(false),
       });
    };
+
+   console.log(question);
+   console.log(data);
 
    return (
       <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
@@ -55,7 +61,7 @@ export default function Index({ errors, data }) {
          </div>
 
          <div className="flex flex-1">
-            <div className="md:w-3/5">
+            <div className="md:w-3/5 lg:w-1/3">
                <Card>
                   <CardContent className="mt-8">
                      <form onSubmit={handleSubmit}>
@@ -94,14 +100,21 @@ export default function Index({ errors, data }) {
                         </div>
                         <div className="grid w-full my-4 max-w-md items-center gap-1.5">
                            <Label>Tingkat Kesulitan</Label>
-                           <Select disabled={isLoading} onValueChange={(e) => setValues({ ...values, kesulitan: e })}>
+                           <Select
+                              disabled={isLoading}
+                              onValueChange={(e) =>
+                                 setValues({ ...values, kesulitan: e })
+                              }
+                           >
                               <SelectTrigger className="w-full">
                                  <SelectValue placeholder="Pilih" />
                               </SelectTrigger>
                               <SelectContent>
                                  <SelectItem value="simple">Mudah</SelectItem>
                                  <SelectItem value="middle">Sedang</SelectItem>
-                                 <SelectItem value="difficult">Sulit</SelectItem>
+                                 <SelectItem value="difficult">
+                                    Sulit
+                                 </SelectItem>
                               </SelectContent>
                            </Select>
                            {errors?.kesulitan && (
@@ -113,14 +126,25 @@ export default function Index({ errors, data }) {
                         </div>
                         <div className="grid w-full my-4 max-w-md items-center gap-1.5">
                            <Label>Tingkat Pendidikan</Label>
-                           <Select disabled={isLoading} onValueChange={(e) => setValues({ ...values, level: e })}>
+                           <Select
+                              disabled={isLoading}
+                              onValueChange={(e) =>
+                                 setValues({ ...values, level: e })
+                              }
+                           >
                               <SelectTrigger className="w-full">
                                  <SelectValue placeholder="Pilih" />
                               </SelectTrigger>
                               <SelectContent>
-                                 <SelectItem value="elementary school">(SD) Sekolah Dasar</SelectItem>
-                                 <SelectItem value="junior high school">(SMP) Sekolah Menengah Pertama</SelectItem>
-                                 <SelectItem value="senior high school">(SMA) Sekolah Menengah Atas</SelectItem>
+                                 <SelectItem value="elementary school">
+                                    (SD) Sekolah Dasar
+                                 </SelectItem>
+                                 <SelectItem value="junior high school">
+                                    (SMP) Sekolah Menengah Pertama
+                                 </SelectItem>
+                                 <SelectItem value="senior high school">
+                                    (SMA) Sekolah Menengah Atas
+                                 </SelectItem>
                               </SelectContent>
                            </Select>
                            {errors?.level && (
@@ -137,7 +161,7 @@ export default function Index({ errors, data }) {
                               size="lg"
                               disabled={isLoading}
                            >
-                              { isLoading ? 'Loading...' : 'Save'}
+                              {isLoading ? "Loading..." : "Save"}
                            </Button>
                         </div>
                      </form>
@@ -147,31 +171,111 @@ export default function Index({ errors, data }) {
             <div className="inline-block mx-4 min-h-[200px] w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
             <div className="w-full">
                <Card>
-                  <CardContent>{!isLoading ? (
-                     <div style={{ whiteSpace: 'pre-line' }}>{(data)}</div>
-                  ) : <>
-                     <h1 className="font-semibold text-xl uppercase my-6">{values.kategori}</h1>
-                     <div>
-                     <div aria-label="Loading..." role="status" className="flex items-center space-x-2">
-                        <svg className="h-20 w-20 animate-spin stroke-gray-500" viewBox="0 0 256 256">
-                           <line x1={128} y1={32} x2={128} y2={64} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
-                           <line x1="195.9" y1="60.1" x2="173.3" y2="82.7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
-                           <line x1={224} y1={128} x2={192} y2={128} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24}>
-                           </line>
-                           <line x1="195.9" y1="195.9" x2="173.3" y2="173.3" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
-                           <line x1={128} y1={224} x2={128} y2={192} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24}>
-                           </line>
-                           <line x1="60.1" y1="195.9" x2="82.7" y2="173.3" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
-                           <line x1={32} y1={128} x2={64} y2={128} strokeLinecap="round" strokeLinejoin="round" strokeWidth={24} />
-                           <line x1="60.1" y1="60.1" x2="82.7" y2="82.7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={24}>
-                           </line>
-                        </svg>
-                        <span className="text-4xl font-medium text-gray-500">Loading...</span>
-                     </div>
-
-                     </div>
-                  </>
-                  }</CardContent>
+                  <CardContent>
+                     {!isLoading ? (
+                        <>
+                           <h1 className="font-semibold text-xl uppercase my-6">
+                              SOAL {values.kategori}
+                           </h1>
+                           {Object.keys(question).map((questionNumber) => (
+                              <QuizQuestion
+                                 key={questionNumber}
+                                 questionNumber={questionNumber}
+                                 questionData={question[questionNumber]}
+                              />
+                           ))}
+                        </>
+                     ) : (
+                        <div>
+                           <div
+                              aria-label="Loading..."
+                              role="status"
+                              className="flex items-center space-x-2"
+                           >
+                              <svg
+                                 className="h-20 w-20 animate-spin stroke-gray-500"
+                                 viewBox="0 0 256 256"
+                              >
+                                 <line
+                                    x1={128}
+                                    y1={32}
+                                    x2={128}
+                                    y2={64}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={24}
+                                 />
+                                 <line
+                                    x1="195.9"
+                                    y1="60.1"
+                                    x2="173.3"
+                                    y2="82.7"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={24}
+                                 />
+                                 <line
+                                    x1={224}
+                                    y1={128}
+                                    x2={192}
+                                    y2={128}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={24}
+                                 ></line>
+                                 <line
+                                    x1="195.9"
+                                    y1="195.9"
+                                    x2="173.3"
+                                    y2="173.3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={24}
+                                 />
+                                 <line
+                                    x1={128}
+                                    y1={224}
+                                    x2={128}
+                                    y2={192}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={24}
+                                 ></line>
+                                 <line
+                                    x1="60.1"
+                                    y1="195.9"
+                                    x2="82.7"
+                                    y2="173.3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={24}
+                                 />
+                                 <line
+                                    x1={32}
+                                    y1={128}
+                                    x2={64}
+                                    y2={128}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={24}
+                                 />
+                                 <line
+                                    x1="60.1"
+                                    y1="60.1"
+                                    x2="82.7"
+                                    y2="82.7"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={24}
+                                 ></line>
+                              </svg>
+                              <span className="text-4xl font-medium text-gray-500">
+                                 Loading...
+                              </span>
+                           </div>
+                        </div>
+                     )}
+                  </CardContent>
                </Card>
             </div>
          </div>

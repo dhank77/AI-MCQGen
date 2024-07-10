@@ -3,7 +3,7 @@ import {
    AlertCircle,
    Bell,
    CheckCheckIcon,
-   Package2,
+   LayoutList,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/partials/header";
@@ -36,8 +36,8 @@ export default function Authenticated({ children }) {
                         href="/"
                         className="flex items-center gap-2 font-semibold"
                      >
-                        <Package2 className="h-6 w-6" />
-                        <span className="">AI PilGan</span>
+                        <LayoutList className="h-6 w-6" />
+                        <span className="">AI MCQ GEN</span>
                      </Link>
                      <Button
                         variant="outline"

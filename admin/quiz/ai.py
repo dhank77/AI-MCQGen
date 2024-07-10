@@ -1,26 +1,30 @@
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain, SequentialChain
-from langchain_community.chat_models import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from django.conf import settings
+import environ
+env = environ.Env()
+environ.Env.read_env('.env')
 
 def generate(kategori, jumlah, kesulitan, level) :
-    pass
-    llama=ChatOllama(model='llama3')
+    gemini = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=env("GOOGLE_GEMINI"), temperature=0.1)
+
 
     TEMPLATE="""
-    Text={text}
-    You are a very reliable teacher in all fields who is assigned to create questions and answers using multiple choice questions.
+    You are an expert MCQ maker, You are a very reliable teacher in all fields who is assigned to create questions and answers using multiple choice questions.
     Create multiple choice questions with {subject} theme and intended for {level} students with {tone} level.
     make sure that the questions are not repeated and make sure all the questions are in text form
-    make sure to make questions is {number}
+    Ensure to make {number} MCQs
+    Make sure to format your response like  RESPONSE_JSON below  and use it as a guide and don't use any other words like kuis / quiz : RESPONSE_JSON, just start  and end with curly braces like format below and use double quotes not single. \
+    {response_json}
     """
 
     quiz_prompt = PromptTemplate(
-        input_variables=["text", "number", "subject", "tone", "response_json", "level"],
+        input_variables=["text", "number", "subject", "tone", "level"],
         template=TEMPLATE,
     )
 
-    quiz_chain = LLMChain(llm=llama, prompt=quiz_prompt, output_key="quiz", verbose=True)
+    quiz_chain = LLMChain(llm=gemini, prompt=quiz_prompt, output_key="quiz", verbose=True)
 
     TEMPLATE2="""
     You are an grammar expert and language writer. Given Multiple Choice Quizzes for {level} students.
@@ -38,18 +42,12 @@ def generate(kategori, jumlah, kesulitan, level) :
         template=TEMPLATE2
     )
 
-    review_chain=LLMChain(llm=llama, prompt=quiz_eval, output_key="eval", verbose=True)
+    review_chain=LLMChain(llm=gemini, prompt=quiz_eval, output_key="eval", verbose=True)
 
     TEMPLATE3="""
     translate the entire following text into Indonesian, if using money format or currency, change it to rupiah with the exchange rate of 1 dollar being 15 thousand rupiah.
-    Make sure the response format is like RESPONSE_JSON below and use that as a guide
-
-    quiz : {quiz}
-
-    eval : {eval}
-
-    ### RESPONSE_JSON
-    {response_json}
+    
+    {quiz}
     """
 
     trans_eval = PromptTemplate(
@@ -57,7 +55,7 @@ def generate(kategori, jumlah, kesulitan, level) :
         template=TEMPLATE3
     )
 
-    trans_chain=LLMChain(llm=llama, prompt=trans_eval, output_key="trans", verbose=True)
+    trans_chain=LLMChain(llm=gemini, prompt=trans_eval, output_key="trans", verbose=True)
 
     generate_eval=SequentialChain(
         chains=[quiz_chain, review_chain, trans_chain],
@@ -66,7 +64,39 @@ def generate(kategori, jumlah, kesulitan, level) :
         verbose=True
     )
 
-    res_json = str(settings.BASE_DIR) + '/' + 'templates/Response.json'
+    res_json = {
+        "1": {
+            "mcq": "multiple choice question",
+            "options": {
+                "a": "choice here",
+                "b": "choice here",
+                "c": "choice here",
+                "d": "choice here",
+            },
+            "correct": "correct answer",
+        },
+        "2": {
+            "mcq": "multiple choice question",
+            "options": {
+                "a": "choice here",
+                "b": "choice here",
+                "c": "choice here",
+                "d": "choice here",
+            },
+            "correct": "correct answer",
+        },
+        "3": {
+            "mcq": "multiple choice question",
+            "options": {
+                "a": "choice here",
+                "b": "choice here",
+                "c": "choice here",
+                "d": "choice here",
+            },
+            "correct": "correct answer",
+        },
+    }
+    
     response = generate_eval({
         "text": "Soal Pilihan Ganda",
         "number": jumlah,
